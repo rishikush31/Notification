@@ -3,7 +3,7 @@ const pool = require("../db");
 // GET /notifications?user=me → list my notifications (paginated)
 exports.getMyNotifications = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.headers['x-user-id'];
     const { limit = 10, offset = 0 } = req.query;
 
     const result = await pool.query(
@@ -23,7 +23,8 @@ exports.getMyNotifications = async (req, res) => {
 
 exports.deleteNotification = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.headers['x-user-id'];
+
     const notifId = req.params.id;
 
     // Ensure notification belongs to the user
@@ -43,7 +44,7 @@ exports.deleteNotification = async (req, res) => {
   } catch (err) {
     console.error("Error deleting notification:", err);
     res.status(500).json({ error: "Failed to delete notification" });
-  } 
+  }
 };
 
 // Create a notification
