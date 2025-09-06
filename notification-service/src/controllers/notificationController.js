@@ -3,6 +3,8 @@ const pool = require("../db");
 // GET /notifications?user=me → list my notifications (paginated)
 exports.getMyNotifications = async (req, res) => {
   try {
+
+    // insert in req
     const userId = req.user.id;
     const { limit = 10, offset = 0 } = req.query;
 
