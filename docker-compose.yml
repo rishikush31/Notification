@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  notification:
+    build: ./notification-service
+    container_name: notification-service
+    ports:
+      - "7000:7000"
+    volumes:
+      - ./notification-service:/usr/src/app   
+      - /usr/src/app/node_modules     
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/notificationdb
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: notification-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: notificationdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db-init/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres-data:/var/lib/postgresql/data   
